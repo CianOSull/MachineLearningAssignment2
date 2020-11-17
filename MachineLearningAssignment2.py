@@ -52,16 +52,31 @@ def preprocess():
     
     # The number of rows taht will be used as samples
     # Initially starting with 200 of each
-    no_samples = 200
+    # no_samples = 200
     
-    # Samples of feature vector and labels
-    fv_samples = feature_vectors[:no_samples]
-    labels_samples = labels[no_samples]
+    # # Samples of feature vector and labels
+    # fv_samples = feature_vectors[:no_samples]
+    # labels_samples = labels[no_samples]
     
-    return fv_samples, labels_samples
+    # Split the data into train and test so its parametised
+    # train_data = feature_vectors[0:int(0.8*len(feature_vectors))]
+    # train_target = labels[0:int(0.8*len(labels))]
+    # test_data = feature_vectors[int(0.8*len(feature_vectors)):len(feature_vectors)]
+    # test_target = labels[int(0.8*len(labels)):len(labels)]
+    
+    # Starting off with reducted amount
+    train_data = feature_vectors[0:int(0.08*len(feature_vectors))]
+    train_target = labels[0:int(0.08*len(labels))]
+    test_data = feature_vectors[int(0.08*len(feature_vectors)):len(feature_vectors)]
+    test_target = labels[int(0.08*len(labels)):len(labels)]
+    
+    return train_data, train_target, test_data, test_target
+
+def perceptron(train_data, train_target, test_data, test_target):
+    
 
 def main():
-    fv_samples, labels_samples = preprocess()    
+    train_data, train_target, test_data, test_target = preprocess()    
     
     
 main()
