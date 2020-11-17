@@ -9,6 +9,7 @@ import numpy as np
 import math
 from sklearn import model_selection
 from sklearn import metrics
+from sklearn import linear_model
 import matplotlib.pyplot as plt
 import random
 
@@ -73,10 +74,25 @@ def preprocess():
     return train_data, train_target, test_data, test_target
 
 def perceptron(train_data, train_target, test_data, test_target):
+    kf = model_selection.KFold(n_splits=2, shuffle=True)
     
-
+    results = []
+    
+    for train_index,test_index in kf.split(train_data):
+        perceptron = linear_model.Perceptron()
+        
+        perceptron.fit(train_data[train_index], train_target[train_index])
+    #     prediction = perceptron.predict(train_data[test_index])
+    
+    #     score = metrics.accuracy_score(train_target[test_index], prediction)
+    #     results.append(score)
+    
+    # # prediction = perceptron.predict(test_data)
+    # print(results)
+        
 def main():
     train_data, train_target, test_data, test_target = preprocess()    
     
+    perceptron( train_data, train_target, test_data, test_target)
     
 main()
