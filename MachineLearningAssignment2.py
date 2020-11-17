@@ -50,8 +50,18 @@ def preprocess():
     plt.imshow(np.reshape(feature_vectors.values[0], (28, 28)), cmap='gray', interpolation='nearest')
     plt.show()
     
+    # The number of rows taht will be used as samples
+    # Initially starting with 200 of each
+    no_samples = 200
     
+    # Samples of feature vector and labels
+    fv_samples = feature_vectors[:no_samples]
+    labels_samples = labels[no_samples]
+    
+    return fv_samples, labels_samples
+
 def main():
-    preprocess()    
+    fv_samples, labels_samples = preprocess()    
+    
     
 main()
