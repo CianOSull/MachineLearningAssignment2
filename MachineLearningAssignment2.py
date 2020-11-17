@@ -37,38 +37,21 @@ def preprocess():
     print("The number of ankle boot:", len(labels[labels == 1]))
     
     # This is an array of pixal values
-    print(feature_vectors.values[0])
+    # print(feature_vectors.values[0])
     
-    # plt.figure(1, figsize=(3, 3))
-    # plt.imshow(feature_vectors.values[0], cmap=plt.cm.gray_r, interpolation='nearest')
-    # plt.show()
 
-def test():
-    digits = datasets.load_digits()
+    # Example Sneaker
+    plt.figure(1, figsize=(3, 3))
+    plt.imshow(np.reshape(feature_vectors.values[3], (28, 28)), cmap='gray', interpolation='nearest')
+    plt.show()
     
-    # print(digits.images[0])
-    # print(digits.data[0])
-    
-    # plt.figure(1, figsize=(3, 3))
-    # plt.imshow(digits.images[0], cmap=plt.cm.gray_r, interpolation='nearest')
-    # plt.show()
-    
-    # Test with product images
-    product_df = pd.read_csv("product_images.csv")
-    
-    feature_vectors = product_df.loc[:, product_df.columns != 'label']
-    
-    # Trying to split values into a 28x28 matrix
-    print(type(feature_vectors.values[0]))
-    print(len(feature_vectors.values[0]))
-    print(feature_vectors.values[0].reshape(2, 28))
-    # for i in feature_vectors.values[0]:
-    #     print(i)
+    # Example Ankle Boot
+    plt.figure(1, figsize=(3, 3))
+    plt.imshow(np.reshape(feature_vectors.values[0], (28, 28)), cmap='gray', interpolation='nearest')
+    plt.show()
     
     
 def main():
-    # preprocess()
-    test()
-    
+    preprocess()    
     
 main()
