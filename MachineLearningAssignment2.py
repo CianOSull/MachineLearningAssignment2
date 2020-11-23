@@ -4,17 +4,28 @@ Created on Mon Nov 16 14:20:05 2020
 
 @author: Cian
 """
+
+# import math
+# import time
+# import pandas as pd
+# import numpy as np
+# import matplotlib.pyplot as plt
+# from sklearn import metrics
+# from sklearn import model_selection
+# from sklearn import linear_model
+# from sklearn import svm
+
+import math
+import time
 import pandas as pd
 import numpy as np
-import math
-from sklearn import model_selection
-from sklearn import metrics
-from sklearn import linear_model
 import matplotlib.pyplot as plt
-import random
-import time
+from sklearn import metrics
+from sklearn import model_selection
+from sklearn import linear_model
+from sklearn import svm
 from sklearn import datasets
-    
+
 # Task 1
 def preprocess():
     product_df = pd.read_csv("product_images.csv")
@@ -89,7 +100,7 @@ def preprocess():
     
     # Sample variable for how much to take
     # samples tested: 0.08, 0.8
-    no_samples = 0.8
+    no_samples = 0.08
     
     # Starting off with reducted amount
     train_data = feature_vectors[0:int(no_samples*len(feature_vectors))]
@@ -132,22 +143,22 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
         stop = time.time()
         
         # Absolute means that it will always be printed positively
-        print("Training time:", abs(stop - start))
+        print("Training time:", abs(stop - start), "s")
         # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point]
         training_times.append(abs(stop - start))
         # I have no idea how this print statement works but it jsut does
         # print(f"Training time: {stop - start}s")
         
-         # the processing time required for prediction [1 point],
+        # the processing time required for prediction [1 point],
         start = time.time()
         
-         # and predict labels for the evaluation subsets [1 point]. 
+        # and predict labels for the evaluation subsets [1 point]. 
         prediction = perceptron.predict(train_data[test_index])
         
-         # This will stop counting time
+        # This will stop counting time
         stop = time.time()
         
-        print("Prediction time:", abs(stop - start))
+        print("Prediction time:", abs(stop - start), "s")
         # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point]
         prediction_times.append(abs(stop - start))
         # print(f"Prediction time: {stop - start}s")
@@ -191,13 +202,8 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
     print("Maximum predicition time per evaulation sample:", max(prediction_times)/no_samples)
     print("Average predicition time per evaulation sample:", (sum(prediction_times)/len(prediction_times))/no_samples)
       
-def svm(train_data, train_target, test_data, test_target, no_samples):
+def svm_func(train_data, train_target, test_data, test_target, no_samples):     
     
-    # Train a support vector machine classifier on the training subsets. Try a linear kernel [1 point] 
-    # and a radial basis function kernel for different choices of the parameter 𝛾 [2 points]. 
-    # Predict the labels for the evaluation subsets [1 point]. 
-    # Measure the time required for training [1 point], 
-    # the time required for prediction [1 point], and
     # determine the accuracy score of the classification [1 point] 
     # and the confusion matrix [1 point] 
     # for each split. Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
@@ -208,12 +214,79 @@ def svm(train_data, train_target, test_data, test_target, no_samples):
     
     # Create a k-fold cross validation procedure to split the data into training and evaluation subsets [1 point]. 
     kf = model_selection.KFold(n_splits=2, shuffle=True)
-
+    
+    linear_training_times = []
+    linear_prediction_times = []
+    
+    rbf_training_times = []
+    rbf_prediction_times = []
+    
+    for train_index,test_index in kf.split(train_data):
+        print("="*100)
+        # Train a support vector machine classifier on the training subsets. Try a linear kernel [1 point] 
+        linear = svm.SVC(kernel="linear")    
+        # and a radial basis function kernel for different choices of the parameter 𝛾 [2 points].
+        rbf = svm.SVC(kernel="rbf", gamma=1e-4) 
+        
+        # Measure the time required for training [1 point], 
+        # Start Training Time
+        start = time.time()
+        
+        linear.fit(train_data[train_index], train_target[train_index])
+        
+        # Stop Training Time
+        stop = time.time()
+        
+        print("Training time:", abs(stop - start), "s")
+        linear_training_times.append(abs(stop - start))
+        
+        # the time required for prediction [1 point], and
+        # Start Prediciton Time
+        start = time.time()
+        
+        predictionLinear = linear.predict(train_data[test_index])
+        
+        # Stop Prediciton Time
+        stop = time.time()
+        
+        print("Prediction time:", abs(stop - start), "s")
+        linear_prediction_times.append(abs(stop - start))
+        
+        # Measure the time required for training [1 point], 
+        # Start Training Time
+        start = time.time()
+        
+        rbf.fit(train_data[train_index], train_target[train_index])
+        
+        # Stop Training Time
+        stop = time.time()
+        
+        print("Training time:", abs(stop - start), "s")
+        rbf_training_times.append(abs(stop - start))
+        
+        # the time required for prediction [1 point], and
+        # Start Prediciton Time
+        start = time.time()
+        
+        predictionRBF = rbf.predict(train_data[test_index])
+        
+         # Stop Prediciton Time
+        stop = time.time()
+        
+        print("Prediction time:", abs(stop - start), "s")
+        rbf_prediction_times.append(abs(stop - start))
+        
+        print(metrics.accuracy_score(train_target[test_index], predictionLinear))
+        print(metrics.accuracy_score(train_target[test_index], predictionRBF))
+    
+    # Predict the labels for the evaluation subsets [1 point].
+    # pass
      
 def main():
     train_data, train_target, test_data, test_target, no_samples = preprocess()    
     
+    # perceptron(train_data, train_target, test_data, test_target, no_samples)
     
-    perceptron(train_data, train_target, test_data, test_target, no_samples)
+    svm_func(train_data, train_target, test_data, test_target, no_samples)
     
 main()
