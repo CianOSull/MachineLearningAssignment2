@@ -12,7 +12,7 @@ from sklearn import metrics
 from sklearn import linear_model
 import matplotlib.pyplot as plt
 import random
-
+import time
 from sklearn import datasets
     
 # Task 1
@@ -98,8 +98,8 @@ def preprocess():
 def perceptron(train_data, train_target, test_data, test_target):
    
    
-    # Measure the processing time required for training [1 point], 
-    # the processing time required for prediction [1 point], 
+    
+   
    
     
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
@@ -118,11 +118,30 @@ def perceptron(train_data, train_target, test_data, test_target):
 
         print("="*100)
         
+        # Measure the processing time required for training [1 point], 
+        # This will create a time variable from this point
+        start = time.time()
+        
         # Train a perceptron classifier on the training subsets [1 point]
         perceptron.fit(train_data[train_index], train_target[train_index])
         
+        # This will stop counting time
+        stop = time.time()
+        
+        # I have no idea how this print statement works but it jsut does
+        print(f"Training time: {stop - start}s")
+        
+         # the processing time required for prediction [1 point],
+        start = time.time()
+        
          # and predict labels for the evaluation subsets [1 point]. 
         prediction = perceptron.predict(train_data[test_index])
+        
+         # This will stop counting time
+        stop = time.time()
+        
+        # I have no idea how this print statement works but it jsut does
+        print(f"Prediction time: {stop - start}s")
         
          # and determine the accuracy score of the classification [1 point] 
         score = metrics.accuracy_score(train_target[test_index], prediction)
