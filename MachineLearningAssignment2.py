@@ -86,22 +86,21 @@ def preprocess():
     # train_target = labels[0:int(0.8*len(labels))]
     # test_data = feature_vectors[int(0.8*len(feature_vectors)):len(feature_vectors)]
     # test_target = labels[int(0.8*len(labels)):len(labels)]
-
+    
+    # Sample variable for how much to take
+    # samples tested: 0.08, 0.8
+    no_samples = 0.8
+    
     # Starting off with reducted amount
-    train_data = feature_vectors[0:int(0.08*len(feature_vectors))]
-    train_target = labels[0:int(0.08*len(labels))]
-    test_data = feature_vectors[int(0.08*len(feature_vectors)):len(feature_vectors)]
-    test_target = labels[int(0.08*len(labels)):len(labels)]
+    train_data = feature_vectors[0:int(no_samples*len(feature_vectors))]
+    train_target = labels[0:int(no_samples*len(labels))]
+    test_data = feature_vectors[int(no_samples*len(feature_vectors)):len(feature_vectors)]
+    test_target = labels[int(no_samples*len(labels)):len(labels)]
     
-    return train_data, train_target, test_data, test_target
+    # Returns train and test vars and the number of samples
+    return train_data, train_target, test_data, test_target, no_samples*len(feature_vectors)
 
-def perceptron(train_data, train_target, test_data, test_target):
-   
-   
-    
-   
-   
-    
+def perceptron(train_data, train_target, test_data, test_target, no_samples):
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point] 
     # 
@@ -128,8 +127,10 @@ def perceptron(train_data, train_target, test_data, test_target):
         # This will stop counting time
         stop = time.time()
         
+        # Absolute means that it will always be printed positively
+        print("Training time:", abs(stop - start))
         # I have no idea how this print statement works but it jsut does
-        print(f"Training time: {stop - start}s")
+        # print(f"Training time: {stop - start}s")
         
          # the processing time required for prediction [1 point],
         start = time.time()
@@ -140,8 +141,8 @@ def perceptron(train_data, train_target, test_data, test_target):
          # This will stop counting time
         stop = time.time()
         
-        # I have no idea how this print statement works but it jsut does
-        print(f"Prediction time: {stop - start}s")
+        print("Prediction time:", abs(stop - start))
+        # print(f"Prediction time: {stop - start}s")
         
          # and determine the accuracy score of the classification [1 point] 
         score = metrics.accuracy_score(train_target[test_index], prediction)
@@ -174,9 +175,9 @@ def perceptron(train_data, train_target, test_data, test_target):
         
         
 def main():
-    train_data, train_target, test_data, test_target = preprocess()    
+    train_data, train_target, test_data, test_target, no_samples = preprocess()    
     
     
-    perceptron(train_data, train_target, test_data, test_target)
+    perceptron(train_data, train_target, test_data, test_target, no_samples)
     
 main()
