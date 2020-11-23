@@ -104,13 +104,14 @@ def perceptron(train_data, train_target, test_data, test_target):
     
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point] 
-    # and the prediction accuracy [1 point]. 
+    # 
     # Use a sufficient number of splits and vary the number of samples to
     # observe the effect on runtime and accuracy [1 point].
     
     kf = model_selection.KFold(n_splits=2, shuffle=True)
 
-
+    best_score = 1e100
+    
      # Create a k-fold cross validation procedure to split the data into training and evaluation subsets [1 point]. 
     for train_index,test_index in kf.split(train_data):
         perceptron = linear_model.Perceptron()
@@ -141,7 +142,16 @@ def perceptron(train_data, train_target, test_data, test_target):
         print("True ankle boots:", np.sum(true_ankleboots))
         print("False sneakers:", np.sum(false_sneakers))
         print("False ankle boots:", np.sum(false_ankleboots))
-       
+        
+        # Whichever kfold split has the best accuracy save it
+        if  score <  best_score:
+            best_clf = perceptron
+     
+    # Test the model on unseen data and get a score
+    test_prediction = best_clf.predict(test_data)
+    # and the prediction accuracy [1 point]. 
+    print("="*100)
+    print("Prediciton accuracy score:", metrics.accuracy_score(test_target, test_prediction))
         
         
 def main():
