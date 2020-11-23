@@ -96,23 +96,53 @@ def preprocess():
     return train_data, train_target, test_data, test_target
 
 def perceptron(train_data, train_target, test_data, test_target):
+   
+   
+    # Measure the processing time required for training [1 point], 
+    # the processing time required for prediction [1 point], 
+   
+    
+    # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
+    # the prediction time per evaluation sample [1 point] 
+    # and the prediction accuracy [1 point]. 
+    # Use a sufficient number of splits and vary the number of samples to
+    # observe the effect on runtime and accuracy [1 point].
+    
     kf = model_selection.KFold(n_splits=2, shuffle=True)
-    
-    results = []
 
-    
+
+     # Create a k-fold cross validation procedure to split the data into training and evaluation subsets [1 point]. 
     for train_index,test_index in kf.split(train_data):
         perceptron = linear_model.Perceptron()
 
-        print("====================")
-
+        print("="*100)
+        
+        # Train a perceptron classifier on the training subsets [1 point]
         perceptron.fit(train_data[train_index], train_target[train_index])
+        
+         # and predict labels for the evaluation subsets [1 point]. 
         prediction = perceptron.predict(train_data[test_index])
-    
+        
+         # and determine the accuracy score of the classification [1 point] 
         score = metrics.accuracy_score(train_target[test_index], prediction)
-        results.append(score)
-    
-    print(results)
+        
+        # and the confusion matrix [1 point] 
+        C = metrics.confusion_matrix(train_target[test_index], prediction)
+        
+        # Setting these to varaibles makes them easeir to read i think
+        true_sneakers = C[0,0]
+        true_ankleboots = C[1,1]            
+        false_sneakers = C[1,0]
+        false_ankleboots = C[0,1]
+
+        # for each split.
+        print("Accuracy Score: ", score)
+        print("True sneakers:", np.sum(true_sneakers))
+        print("True ankle boots:", np.sum(true_ankleboots))
+        print("False sneakers:", np.sum(false_sneakers))
+        print("False ankle boots:", np.sum(false_ankleboots))
+       
+        
         
 def main():
     train_data, train_target, test_data, test_target = preprocess()    
