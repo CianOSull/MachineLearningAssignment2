@@ -204,8 +204,8 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
       
 def svm_func(train_data, train_target, test_data, test_target, no_samples):     
     
-    # determine the accuracy score of the classification [1 point] 
-    # and the confusion matrix [1 point] 
+    
+   
     # for each split. Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point] 
     # and the prediction accuracy [1 point]. 
@@ -276,9 +276,41 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
         print("Prediction time:", abs(stop - start), "s")
         rbf_prediction_times.append(abs(stop - start))
         
+        # determine the accuracy score of the classification [1 point] 
         print(metrics.accuracy_score(train_target[test_index], predictionLinear))
         print(metrics.accuracy_score(train_target[test_index], predictionRBF))
-    
+        
+        # and the confusion matrix [1 point] 
+        cLinear = metrics.confusion_matrix(train_target[test_index], predictionLinear)
+        
+        # Setting these to varaibles makes them easeir to read i think
+        true_sneakers = cLinear[0,0]
+        true_ankleboots = cLinear[1,1]            
+        false_sneakers = cLinear[1,0]
+        false_ankleboots = cLinear[0,1]
+
+        # Confusion matrix for linear.
+        print("True sneakers:", np.sum(true_sneakers))
+        print("True ankle boots:", np.sum(true_ankleboots))
+        print("False sneakers:", np.sum(false_sneakers))
+        print("False ankle boots:", np.sum(false_ankleboots))
+        
+        # and the confusion matrix [1 point] 
+        cRBF = metrics.confusion_matrix(train_target[test_index], predictionRBF)
+        
+        # Setting these to varaibles makes them easeir to read i think
+        true_sneakers = cRBF[0,0]
+        true_ankleboots = cRBF[1,1]            
+        false_sneakers = cRBF[1,0]
+        false_ankleboots = cRBF[0,1]
+
+        # Confusion matrix for rbf.
+        print("True sneakers:", np.sum(true_sneakers))
+        print("True ankle boots:", np.sum(true_ankleboots))
+        print("False sneakers:", np.sum(false_sneakers))
+        print("False ankle boots:", np.sum(false_ankleboots))
+        
+        
     # Predict the labels for the evaluation subsets [1 point].
     # pass
      
