@@ -103,12 +103,16 @@ def preprocess():
 def perceptron(train_data, train_target, test_data, test_target, no_samples):
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point] 
+    # NOTE: minimium, maximum and training timer probably refers to the number of splits so save times to a list
     # 
     # Use a sufficient number of splits and vary the number of samples to
     # observe the effect on runtime and accuracy [1 point].
     
     kf = model_selection.KFold(n_splits=2, shuffle=True)
-
+    
+    training_times = []
+    prediction_times = []
+    
     best_score = 1e100
     
      # Create a k-fold cross validation procedure to split the data into training and evaluation subsets [1 point]. 
@@ -129,6 +133,8 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
         
         # Absolute means that it will always be printed positively
         print("Training time:", abs(stop - start))
+        # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point]
+        training_times.append(abs(stop - start))
         # I have no idea how this print statement works but it jsut does
         # print(f"Training time: {stop - start}s")
         
@@ -142,6 +148,8 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
         stop = time.time()
         
         print("Prediction time:", abs(stop - start))
+        # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point]
+        prediction_times.append(abs(stop - start))
         # print(f"Prediction time: {stop - start}s")
         
          # and determine the accuracy score of the classification [1 point] 
@@ -169,11 +177,39 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
      
     # Test the model on unseen data and get a score
     test_prediction = best_clf.predict(test_data)
+    
     # and the prediction accuracy [1 point]. 
     print("="*100)
     print("Prediciton accuracy score:", metrics.accuracy_score(test_target, test_prediction))
         
-        
+    # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
+    # the prediction time per evaluation sample [1 point]     
+    print("Minimum training time per training sample:", min(training_times)/no_samples)
+    print("Maximum training time per training sample:", max(training_times)/no_samples)
+    print("Average training time per training sample:", (sum(training_times)/len(training_times))/no_samples)
+    print("Minimum predicition time per evaulation sample:", min(prediction_times)/no_samples)
+    print("Maximum predicition time per evaulation sample:", max(prediction_times)/no_samples)
+    print("Average predicition time per evaulation sample:", (sum(prediction_times)/len(prediction_times))/no_samples)
+      
+def svm(train_data, train_target, test_data, test_target, no_samples):
+    
+    # Train a support vector machine classifier on the training subsets. Try a linear kernel [1 point] 
+    # and a radial basis function kernel for different choices of the parameter 𝛾 [2 points]. 
+    # Predict the labels for the evaluation subsets [1 point]. 
+    # Measure the time required for training [1 point], 
+    # the time required for prediction [1 point], and
+    # determine the accuracy score of the classification [1 point] 
+    # and the confusion matrix [1 point] 
+    # for each split. Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
+    # the prediction time per evaluation sample [1 point] 
+    # and the prediction accuracy [1 point]. 
+    # Determine a good value for 𝛾 based on the mean accuracies you calculated [1 point]. 
+    # Use a sufficient number of splits and vary the number of samples to observe the effect on runtime and accuracy [1 point].
+    
+    # Create a k-fold cross validation procedure to split the data into training and evaluation subsets [1 point]. 
+    kf = model_selection.KFold(n_splits=2, shuffle=True)
+
+     
 def main():
     train_data, train_target, test_data, test_target, no_samples = preprocess()    
     
