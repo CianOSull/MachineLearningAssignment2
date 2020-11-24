@@ -190,13 +190,13 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
         
         # Whichever kfold split has the best accuracy save it
         if  score <  best_score:
-            best_clf = perceptron
+            best_perceptron = perceptron
     
     # Break up the results from each split
     print("="*50)
     
     # Test the model on unseen data and get a score
-    test_prediction = best_clf.predict(test_data)
+    test_prediction = best_perceptron.predict(test_data)
     
     # and the prediction accuracy [1 point]. 
     print("Prediciton accuracy score:", metrics.accuracy_score(test_target, test_prediction))
@@ -395,7 +395,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
 def main():
     train_data, train_target, test_data, test_target, no_samples = preprocess()    
     
-    # perceptron(train_data, train_target, test_data, test_target, no_samples)
+    perceptron(train_data, train_target, test_data, test_target, no_samples)
     
     svm_func(train_data, train_target, test_data, test_target, no_samples)
     
