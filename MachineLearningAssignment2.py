@@ -195,12 +195,12 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
         
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point]     
-    print("Minimum training time per training sample:", min(training_times)/no_samples)
-    print("Maximum training time per training sample:", max(training_times)/no_samples)
-    print("Average training time per training sample:", (sum(training_times)/len(training_times))/no_samples)
-    print("Minimum predicition time per evaulation sample:", min(prediction_times)/no_samples)
-    print("Maximum predicition time per evaulation sample:", max(prediction_times)/no_samples)
-    print("Average predicition time per evaulation sample:", (sum(prediction_times)/len(prediction_times))/no_samples)
+    print("Minimum training time per training sample:", min(training_times)/no_samples, "s")
+    print("Maximum training time per training sample:", max(training_times)/no_samples, "s")
+    print("Average training time per training sample:", (sum(training_times)/len(training_times))/no_samples, "s")
+    print("Minimum predicition time per evaulation sample:", min(prediction_times)/no_samples, "s")
+    print("Maximum predicition time per evaulation sample:", max(prediction_times)/no_samples, "s")
+    print("Average predicition time per evaulation sample:", (sum(prediction_times)/len(prediction_times))/no_samples, "s")
       
 def svm_func(train_data, train_target, test_data, test_target, no_samples):     
     
@@ -208,7 +208,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
    
     # for each split. Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point] 
-    # and the prediction accuracy [1 point]. 
+
     # Determine a good value for 𝛾 based on the mean accuracies you calculated [1 point]. 
     # Use a sufficient number of splits and vary the number of samples to observe the effect on runtime and accuracy [1 point].
     
@@ -220,6 +220,10 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
     
     rbf_training_times = []
     rbf_prediction_times = []
+    
+    best_score_linear = 1e100
+    best_score_rbf = 1e100
+    
     
     for train_index,test_index in kf.split(train_data):
         print("="*100)
@@ -277,8 +281,11 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
         rbf_prediction_times.append(abs(stop - start))
         
         # determine the accuracy score of the classification [1 point] 
-        print(metrics.accuracy_score(train_target[test_index], predictionLinear))
-        print(metrics.accuracy_score(train_target[test_index], predictionRBF))
+        linear_score = metrics.accuracy_score(train_target[test_index], predictionLinear)
+        rbf_score = metrics.accuracy_score(train_target[test_index], predictionRBF)
+        
+        print(linear_score)
+        print(rbf_score)
         
         # and the confusion matrix [1 point] 
         cLinear = metrics.confusion_matrix(train_target[test_index], predictionLinear)
@@ -290,10 +297,10 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
         false_ankleboots = cLinear[0,1]
 
         # Confusion matrix for linear.
-        print("True sneakers:", np.sum(true_sneakers))
-        print("True ankle boots:", np.sum(true_ankleboots))
-        print("False sneakers:", np.sum(false_sneakers))
-        print("False ankle boots:", np.sum(false_ankleboots))
+        print("Linear True sneakers:", np.sum(true_sneakers))
+        print("Linear True ankle boots:", np.sum(true_ankleboots))
+        print("Linear False sneakers:", np.sum(false_sneakers))
+        print("Linear False ankle boots:", np.sum(false_ankleboots))
         
         # and the confusion matrix [1 point] 
         cRBF = metrics.confusion_matrix(train_target[test_index], predictionRBF)
@@ -305,19 +312,49 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
         false_ankleboots = cRBF[0,1]
 
         # Confusion matrix for rbf.
-        print("True sneakers:", np.sum(true_sneakers))
-        print("True ankle boots:", np.sum(true_ankleboots))
-        print("False sneakers:", np.sum(false_sneakers))
-        print("False ankle boots:", np.sum(false_ankleboots))
+        print("RBF True sneakers:", np.sum(true_sneakers))
+        print("RBF True ankle boots:", np.sum(true_ankleboots))
+        print("RBF False sneakers:", np.sum(false_sneakers))
+        print("RBF False ankle boots:", np.sum(false_ankleboots))
+        
+        # Whichever kfold split has the best accuracy save it
+        if  linear_score <  best_score_linear:
+            best_linear = linear
+            
+        if  rbf_score <  best_score_rbf:
+            best_rbf = rbf
         
         
-    # Predict the labels for the evaluation subsets [1 point].
-    # pass
-     
+    # and the prediction accuracy [1 point]. 
+    print("="*100)
+    print("Prediciton accuracy score for Linear:", metrics.accuracy_score(test_target, best_linear.predict(test_data)))
+    
+    # and the prediction accuracy [1 point]. 
+    print("="*100)
+    print("Prediciton accuracy score for rbf:", metrics.accuracy_score(test_target, best_rbf.predict(test_data)))
+    
+    # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
+    # the prediction time per evaluation sample [1 point]     
+    print("Minimum Linear training time per training sample:", min(linear_training_times)/no_samples, "s")
+    print("Maximum Linear training time per training sample:", max(linear_training_times)/no_samples, "s")
+    print("Average Linear training time per training sample:", (sum(linear_training_times)/len(linear_training_times))/no_samples, "s")
+    print("Minimum Linear predicition time per evaulation sample:", min(linear_prediction_times)/no_samples, "s")
+    print("Maximum Linear predicition time per evaulation sample:", max(linear_prediction_times)/no_samples, "s")
+    print("Average Linear predicition time per evaulation sample:", (sum(linear_prediction_times)/len(linear_prediction_times))/no_samples, "s")
+    
+    # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
+    # the prediction time per evaluation sample [1 point]     
+    print("Minimum rbf training time per training sample:", min(rbf_training_times)/no_samples, "s")
+    print("Maximum rbf training time per training sample:", max(rbf_training_times)/no_samples, "s")
+    print("Average rbf training time per training sample:", (sum(rbf_training_times)/len(rbf_training_times))/no_samples, "s")
+    print("Minimum rbf predicition time per evaulation sample:", min(rbf_prediction_times)/no_samples, "s")
+    print("Maximum rbf predicition time per evaulation sample:", max(rbf_prediction_times)/no_samples, "s")
+    print("Average rbf predicition time per evaulation sample:", (sum(rbf_prediction_times)/len(rbf_prediction_times))/no_samples, "s")
+    
 def main():
     train_data, train_target, test_data, test_target, no_samples = preprocess()    
     
-    # perceptron(train_data, train_target, test_data, test_target, no_samples)
+    perceptron(train_data, train_target, test_data, test_target, no_samples)
     
     svm_func(train_data, train_target, test_data, test_target, no_samples)
     
