@@ -28,6 +28,8 @@ from sklearn import datasets
 
 # Task 1
 def preprocess():
+    print("======================Task1======================")
+    
     product_df = pd.read_csv("product_images.csv")
     # take a look at the dataset
     # print(product_df.head())
@@ -111,6 +113,8 @@ def preprocess():
     # Returns train and test vars and the number of samples
     return train_data, train_target, test_data, test_target, no_samples*len(feature_vectors)
 
+
+# Task 2
 def perceptron(train_data, train_target, test_data, test_target, no_samples):
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point] 
@@ -126,11 +130,13 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
     
     best_score = 1e100
     
+    print("======================Task2======================")
+    
      # Create a k-fold cross validation procedure to split the data into training and evaluation subsets [1 point]. 
     for train_index,test_index in kf.split(train_data):
+        print("====================Split====================")
+        
         perceptron = linear_model.Perceptron()
-
-        print("="*100)
         
         # Measure the processing time required for training [1 point], 
         # This will create a time variable from this point
@@ -185,12 +191,14 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
         # Whichever kfold split has the best accuracy save it
         if  score <  best_score:
             best_clf = perceptron
-     
+    
+    # Break up the results from each split
+    print("="*50)
+    
     # Test the model on unseen data and get a score
     test_prediction = best_clf.predict(test_data)
     
     # and the prediction accuracy [1 point]. 
-    print("="*100)
     print("Prediciton accuracy score:", metrics.accuracy_score(test_target, test_prediction))
         
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
@@ -201,7 +209,9 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
     print("Minimum predicition time per evaulation sample:", min(prediction_times)/no_samples, "s")
     print("Maximum predicition time per evaulation sample:", max(prediction_times)/no_samples, "s")
     print("Average predicition time per evaulation sample:", (sum(prediction_times)/len(prediction_times))/no_samples, "s")
-      
+    
+    
+# Task 3
 def svm_func(train_data, train_target, test_data, test_target, no_samples):     
     
     
@@ -224,13 +234,16 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
     best_score_linear = 1e100
     best_score_rbf = 1e100
     
+    print("======================Task3======================")
     
     for train_index,test_index in kf.split(train_data):
-        print("="*100)
+        print("====================Split====================")
+        
+        # Linear SVM information will  go from below
+        print("====================Linear Kernal====================")
+        
         # Train a support vector machine classifier on the training subsets. Try a linear kernel [1 point] 
         linear = svm.SVC(kernel="linear")    
-        # and a radial basis function kernel for different choices of the parameter 𝛾 [2 points].
-        rbf = svm.SVC(kernel="rbf", gamma=1e-4) 
         
         # Measure the time required for training [1 point], 
         # Start Training Time
@@ -256,9 +269,36 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
         print("Prediction time:", abs(stop - start), "s")
         linear_prediction_times.append(abs(stop - start))
         
+        # determine the accuracy score of the classification [1 point] 
+        linear_score = metrics.accuracy_score(train_target[test_index], predictionLinear)
+        print("Linear Accuracy Score: ", linear_score)
+        
+        # and the confusion matrix [1 point] 
+        cLinear = metrics.confusion_matrix(train_target[test_index], predictionLinear)
+        
+        # Setting these to varaibles makes them easeir to read i think
+        true_sneakers = cLinear[0,0]
+        true_ankleboots = cLinear[1,1]            
+        false_sneakers = cLinear[1,0]
+        false_ankleboots = cLinear[0,1]
+
+        # Confusion matrix for linear.
+        print("Linear True sneakers:", np.sum(true_sneakers))
+        print("Linear True ankle boots:", np.sum(true_ankleboots))
+        print("Linear False sneakers:", np.sum(false_sneakers))
+        print("Linear False ankle boots:", np.sum(false_ankleboots))
+        
+        #==============================================================
+        
+        # Linear SVM information will  go from below
+        print("====================RBF Kernal====================")
+        
+        # and a radial basis function kernel for different choices of the parameter 𝛾 [2 points].
+        rbf = svm.SVC(kernel="rbf", gamma=1e-4) 
+        
         # Measure the time required for training [1 point], 
         # Start Training Time
-        start = time.time()
+        start = time.time()        
         
         rbf.fit(train_data[train_index], train_target[train_index])
         
@@ -281,26 +321,8 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
         rbf_prediction_times.append(abs(stop - start))
         
         # determine the accuracy score of the classification [1 point] 
-        linear_score = metrics.accuracy_score(train_target[test_index], predictionLinear)
         rbf_score = metrics.accuracy_score(train_target[test_index], predictionRBF)
-        
-        print(linear_score)
-        print(rbf_score)
-        
-        # and the confusion matrix [1 point] 
-        cLinear = metrics.confusion_matrix(train_target[test_index], predictionLinear)
-        
-        # Setting these to varaibles makes them easeir to read i think
-        true_sneakers = cLinear[0,0]
-        true_ankleboots = cLinear[1,1]            
-        false_sneakers = cLinear[1,0]
-        false_ankleboots = cLinear[0,1]
-
-        # Confusion matrix for linear.
-        print("Linear True sneakers:", np.sum(true_sneakers))
-        print("Linear True ankle boots:", np.sum(true_ankleboots))
-        print("Linear False sneakers:", np.sum(false_sneakers))
-        print("Linear False ankle boots:", np.sum(false_ankleboots))
+        print("RBF Accuracy Score: ", rbf_score)
         
         # and the confusion matrix [1 point] 
         cRBF = metrics.confusion_matrix(train_target[test_index], predictionRBF)
@@ -317,6 +339,9 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
         print("RBF False sneakers:", np.sum(false_sneakers))
         print("RBF False ankle boots:", np.sum(false_ankleboots))
         
+        # Break up Results from each split
+        # print("="*100)
+        
         # Whichever kfold split has the best accuracy save it
         if  linear_score <  best_score_linear:
             best_linear = linear
@@ -326,11 +351,10 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
         
         
     # and the prediction accuracy [1 point]. 
-    print("="*100)
-    print("Prediciton accuracy score for Linear:", metrics.accuracy_score(test_target, best_linear.predict(test_data)))
+    print("="*50)
     
-    # and the prediction accuracy [1 point]. 
-    print("="*100)
+    print("Prediciton accuracy score for Linear:", metrics.accuracy_score(test_target, best_linear.predict(test_data)))
+
     print("Prediciton accuracy score for rbf:", metrics.accuracy_score(test_target, best_rbf.predict(test_data)))
     
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
@@ -350,6 +374,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
     print("Minimum rbf predicition time per evaulation sample:", min(rbf_prediction_times)/no_samples, "s")
     print("Maximum rbf predicition time per evaulation sample:", max(rbf_prediction_times)/no_samples, "s")
     print("Average rbf predicition time per evaulation sample:", (sum(rbf_prediction_times)/len(rbf_prediction_times))/no_samples, "s")
+    
     
 def main():
     train_data, train_target, test_data, test_target, no_samples = preprocess()    
