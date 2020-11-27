@@ -5,17 +5,6 @@ Created on Mon Nov 16 14:20:05 2020
 @author: Cian
 """
 
-# import math
-# import time
-# import pandas as pd
-# import numpy as np
-# import matplotlib.pyplot as plt
-# from sklearn import metrics
-# from sklearn import model_selection
-# from sklearn import linear_model
-# from sklearn import svm
-
-import math
 import time
 import pandas as pd
 import numpy as np
@@ -24,7 +13,6 @@ from sklearn import metrics
 from sklearn import model_selection
 from sklearn import linear_model
 from sklearn import svm
-from sklearn import datasets
 
 # Task 1
 def preprocess():
@@ -77,12 +65,6 @@ def preprocess():
 
 # Task 2
 def perceptron(train_data, train_target, test_data, test_target, no_samples, no_splits):
-    # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
-    # the prediction time per evaluation sample [1 point] 
-    # NOTE: minimium, maximum and training timer probably refers to the number of splits so save times to a list
-    # 
-    # Use a sufficient number of splits and vary the number of samples to
-    # observe the effect on runtime and accuracy [1 point].
     
     kf = model_selection.KFold(n_splits=no_splits, shuffle=True)
     
@@ -214,6 +196,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
     
     rbf_training_times = []
     rbf_prediction_times = []
+    rbf_accuracies = []
     
     best_score_linear = 1e100
     best_score_rbf = 1e100
@@ -307,6 +290,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
         # determine the accuracy score of the classification [1 point] 
         rbf_score = metrics.accuracy_score(train_target[test_index], predictionRBF)
         print("RBF Accuracy Score: ", rbf_score)
+        rbf_accuracies.append(rbf_score)
         
         # and the confusion matrix [1 point] 
         cRBF = metrics.confusion_matrix(train_target[test_index], predictionRBF)
@@ -352,6 +336,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
     print("="*50)
     
     print("Prediciton accuracy score for rbf:", metrics.accuracy_score(test_target, best_rbf.predict(test_data)))
+    print("Mean Accuarcy of rbf accross splits:", sum(rbf_accuracies)/len(rbf_accuracies))
     
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point]     
@@ -388,7 +373,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
 def main():
     train_data, train_target, test_data, test_target, no_samples = preprocess()    
     
-    perceptron(train_data, train_target, test_data, test_target, no_samples, 2)
+    # perceptron(train_data, train_target, test_data, test_target, no_samples, 2)
     
     svm_func(train_data, train_target, test_data, test_target, no_samples, 2)
     
