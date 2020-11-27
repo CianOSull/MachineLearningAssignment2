@@ -102,7 +102,11 @@ def preprocess():
     
     # Sample variable for how much to take
     # samples tested: 0.08, 0.8
+    # no_samples = 0.08
     no_samples = 0.8
+    # no_samples = 0.04
+    # no_samples = 0.4
+    
     
     # Starting off with reducted amount
     train_data = feature_vectors[0:int(no_samples*len(feature_vectors))]
@@ -115,7 +119,7 @@ def preprocess():
 
 
 # Task 2
-def perceptron(train_data, train_target, test_data, test_target, no_samples):
+def perceptron(train_data, train_target, test_data, test_target, no_samples, no_splits):
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point] 
     # NOTE: minimium, maximum and training timer probably refers to the number of splits so save times to a list
@@ -123,7 +127,7 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
     # Use a sufficient number of splits and vary the number of samples to
     # observe the effect on runtime and accuracy [1 point].
     
-    kf = model_selection.KFold(n_splits=2, shuffle=True)
+    kf = model_selection.KFold(n_splits=no_splits, shuffle=True)
     
     training_times = []
     prediction_times = []
@@ -200,9 +204,9 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
     
     # and the prediction accuracy [1 point]. 
     print("Prediciton accuracy score:", metrics.accuracy_score(test_target, test_prediction))
-        
+    
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
-    # the prediction time per evaluation sample [1 point]     
+    # the prediction time per evaluation sample [1 point] 
     print("Minimum training time per training sample:", min(training_times)/no_samples, "secs")
     print("Maximum training time per training sample:", max(training_times)/no_samples, "secs")
     print("Average training time per training sample:", (sum(training_times)/len(training_times))/no_samples, "secs")
@@ -210,9 +214,18 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples):
     print("Maximum predicition time per evaulation sample:", max(prediction_times)/no_samples, "secs")
     print("Average predicition time per evaulation sample:", (sum(prediction_times)/len(prediction_times))/no_samples, "secs")
     
+    # Confused by sample question, have it written in two ways with above being main and this one
+    # being antoher attempt that switched from.
+    # print("Minimum training time per training sample:", min(training_times), "secs")
+    # print("Maximum training time per training sample:", max(training_times), "secs")
+    # print("Average training time per training sample:", sum(training_times)/len(training_times), "secs")
+    # print("Minimum predicition time per evaulation sample:", min(prediction_times), "secs")
+    # print("Maximum predicition time per evaulation sample:", max(prediction_times), "secs")
+    # print("Average predicition time per evaulation sample:", (sum(prediction_times)/len(prediction_times)), "secs")
+       
     
 # Task 3
-def svm_func(train_data, train_target, test_data, test_target, no_samples):     
+def svm_func(train_data, train_target, test_data, test_target, no_samples, no_splits):     
     
    
     # for each split. Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
@@ -237,7 +250,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
     # A         A               A                       A
     
     # Create a k-fold cross validation procedure to split the data into training and evaluation subsets [1 point]. 
-    kf = model_selection.KFold(n_splits=2, shuffle=True)
+    kf = model_selection.KFold(n_splits=no_splits, shuffle=True)
     
     linear_training_times = []
     linear_prediction_times = []
@@ -369,7 +382,8 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
     
     print("Prediciton accuracy score for Linear:", metrics.accuracy_score(test_target, best_linear.predict(test_data)))
     
-    # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
+    
+        # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point]     
     print("Minimum Linear training time per training sample:", min(linear_training_times)/no_samples, "secs")
     print("Maximum Linear training time per training sample:", max(linear_training_times)/no_samples, "secs")
@@ -384,19 +398,41 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples):
     
     # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
     # the prediction time per evaluation sample [1 point]     
-    print("Minimum rbf training time per training sample:", min(rbf_training_times)/no_samples, "secs")
-    print("Maximum rbf training time per training sample:", max(rbf_training_times)/no_samples, "secs")
-    print("Average rbf training time per training sample:", (sum(rbf_training_times)/len(rbf_training_times))/no_samples, "secs")
-    print("Minimum rbf predicition time per evaulation sample:", min(rbf_prediction_times)/no_samples, "secs")
-    print("Maximum rbf predicition time per evaulation sample:", max(rbf_prediction_times)/no_samples, "secs")
-    print("Average rbf predicition time per evaulation sample:", (sum(rbf_prediction_times)/len(rbf_prediction_times))/no_samples, "secs")
+    # print("Minimum rbf training time per training sample:", min(rbf_training_times)/no_samples, "secs")
+    # print("Maximum rbf training time per training sample:", max(rbf_training_times)/no_samples, "secs")
+    # print("Average rbf training time per training sample:", (sum(rbf_training_times)/len(rbf_training_times))/no_samples, "secs")
+    # print("Minimum rbf predicition time per evaulation sample:", min(rbf_prediction_times)/no_samples, "secs")
+    # print("Maximum rbf predicition time per evaulation sample:", max(rbf_prediction_times)/no_samples, "secs")
+    # print("Average rbf predicition time per evaulation sample:", (sum(rbf_prediction_times)/len(rbf_prediction_times))/no_samples, "secs")
+    
+    # # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
+    # # the prediction time per evaluation sample [1 point]     
+    # print("Minimum Linear training time per training sample:", min(linear_training_times), "secs")
+    # print("Maximum Linear training time per training sample:", max(linear_training_times), "secs")
+    # print("Average Linear training time per training sample:", sum(linear_training_times)/len(linear_training_times), "secs")
+    # print("Minimum Linear predicition time per evaulation sample:", min(linear_prediction_times)/no_samples, "secs")
+    # print("Maximum Linear predicition time per evaulation sample:", max(linear_prediction_times)/no_samples, "secs")
+    # print("Average Linear predicition time per evaulation sample:", sum(linear_prediction_times)/len(linear_prediction_times), "secs")
+    
+    # print("="*50)
+    
+    # print("Prediciton accuracy score for rbf:", metrics.accuracy_score(test_target, best_rbf.predict(test_data)))
+    
+    # # Calculate the minimum, the maximum, and the average of the training time per training sample [1 point], 
+    # # the prediction time per evaluation sample [1 point]     
+    print("Minimum rbf training time per training sample:", min(rbf_training_times), "secs")
+    print("Maximum rbf training time per training sample:", max(rbf_training_times), "secs")
+    print("Average rbf training time per training sample:", (sum(rbf_training_times)/len(rbf_training_times)), "secs")
+    print("Minimum rbf predicition time per evaulation sample:", min(rbf_prediction_times), "secs")
+    print("Maximum rbf predicition time per evaulation sample:", max(rbf_prediction_times), "secs")
+    print("Average rbf predicition time per evaulation sample:", sum(rbf_prediction_times)/len(rbf_prediction_times), "secs")
     
     
 def main():
     train_data, train_target, test_data, test_target, no_samples = preprocess()    
     
-    perceptron(train_data, train_target, test_data, test_target, no_samples)
+    # perceptron(train_data, train_target, test_data, test_target, no_samples, 32)
     
-    svm_func(train_data, train_target, test_data, test_target, no_samples)
+    svm_func(train_data, train_target, test_data, test_target, no_samples, 4)
     
 main()
