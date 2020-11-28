@@ -50,9 +50,14 @@ def preprocess():
      
     
     # Sample variable for the amount of samples form the feature vector to use
-    no_samples = 0.8
-    
-    
+    # no_samples = 0.02
+    # no_samples = 0.2
+    # no_samples = 0.05
+    # no_samples = 0.5
+    no_samples = 0.08
+    # no_samples = 0.7
+    # no_samples = 0.8
+
     # Starting off with reducted amount
     train_data = feature_vectors[0:int(no_samples*len(feature_vectors))]
     train_target = labels[0:int(no_samples*len(labels))]
@@ -64,14 +69,16 @@ def preprocess():
 
 
 # Task 2
-def perceptron(train_data, train_target, test_data, test_target, no_samples, no_splits):
+def perceptron(train_data, train_target, test_data, test_target, no_samples):
     
-    kf = model_selection.KFold(n_splits=no_splits, shuffle=True)
+    # Through testing it was found that 4 was the found to be the optimal
+    # amount of splits with 32 being second.
+    kf = model_selection.KFold(n_splits=4, shuffle=True)
     
     training_times = []
     prediction_times = []
     
-    best_score = 1e100
+    best_score = 1e-10
     
     print("======================Task2======================")
     
@@ -129,7 +136,7 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples, no_
         print("False ankle boots:", np.sum(false_ankleboots))
         
         # Whichever kfold split has the best accuracy save it
-        if  score <  best_score:
+        if  best_score < score:
             best_perceptron = perceptron
     
     # Break up the results from each split
@@ -152,7 +159,7 @@ def perceptron(train_data, train_target, test_data, test_target, no_samples, no_
     
     
 # Task 3
-def svm_func(train_data, train_target, test_data, test_target, no_samples, no_splits):     
+def svm_func(train_data, train_target, test_data, test_target, no_samples):     
 
     # ================ Currently Tested Gamma and Ksplits and accuracies: ================
     # Tests where no_samples was 0.08:
@@ -170,7 +177,8 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
     # A         A               A                       A
     
     # Create a k-fold cross validation procedure to split the data into training and evaluation subsets [1 point]. 
-    kf = model_selection.KFold(n_splits=no_splits, shuffle=True)
+    # A split value of 4 was found again to be a sufficiant number of splits
+    kf = model_selection.KFold(n_splits=4, shuffle=True)
     
     linear_training_times = []
     linear_prediction_times = []
@@ -179,8 +187,8 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
     rbf_prediction_times = []
     rbf_accuracies = []
     
-    best_score_linear = 1e100
-    best_score_rbf = 1e100
+    best_score_linear = 1e-10
+    best_score_rbf = 1e-10
     
     print("======================Task3======================")
     
@@ -242,7 +250,7 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
         print("====================RBF Kernal====================")
         
         # and a radial basis function kernel for different choices of the parameter 𝛾 [2 points].
-        rbf = svm.SVC(kernel="rbf", gamma=1e-9) 
+        rbf = svm.SVC(kernel="rbf", gamma=1e-6) 
         
         # Measure the time required for training [1 point], 
         # Start Training Time
@@ -292,10 +300,10 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
         # print("="*100)
         
         # Whichever kfold split has the best accuracy save it
-        if  linear_score <  best_score_linear:
+        if  best_score_linear < linear_score :
             best_linear = linear
             
-        if  rbf_score <  best_score_rbf:
+        if  best_score_rbf < rbf_score:
             best_rbf = rbf
         
         
@@ -330,8 +338,8 @@ def svm_func(train_data, train_target, test_data, test_target, no_samples, no_sp
 def main():
     train_data, train_target, test_data, test_target, no_samples = preprocess()    
     
-    perceptron(train_data, train_target, test_data, test_target, no_samples, 2)
+    perceptron(train_data, train_target, test_data, test_target, no_samples)
     
-    svm_func(train_data, train_target, test_data, test_target, no_samples, 2)
+    svm_func(train_data, train_target, test_data, test_target, no_samples)
     
 main()
